@@ -35,14 +35,37 @@
         //list.shuffle();
         var list = new DelayFeedBackArray();
         setInterval(function(){
-            cm.drawfbArray(list);
-        },1000);
+            cm.drawArray(list);
+        },10);
         
-        fill();
+        //fill();
+        //check();
+        run();
+        
+        
+        
+        async function run(){
+            await fill();
+            await check();
+        }
+        
+        
         async function fill() {
-            for(var i = 0; i < 12; i++){
+            return new Promise(async resolve => {
+            for(var i = 0; i < 1000; i++){
                var result = await list.push(i+1);
             }
+            resolve();
+        });
+            
+
+        }
+        async function check() {
+            for(var i = 0; i < 1000; i++){
+               var result = await list.getWithDelay(i);
+                console.log(result);
+            }
+
         }
 
         
