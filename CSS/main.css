@@ -1,0 +1,9 @@
+#display {
+    display:block;
+    border: solid black 1px;
+}
+
+.jumbotron {
+    background-color: white;
+}
+
