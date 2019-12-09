@@ -17,7 +17,7 @@
         <div class="text-center">
             <h3>Visual Sorting Algorithms</h3> 
         </div>
-        <div class="container-row">
+        <div class="row">
             <div class="col-xs-2">
             </div>
             <div class="col-xs-8 p-0">
@@ -26,53 +26,175 @@
             <div class="col-xs-2">
             </div>
         </div>
+        <div class="row mt-5">
+            <div class="col-xs-12">
+                <input class="btn btn-primary" onclick="shuffle()" type="button" value="Shuffle">
+                <input class="btn btn-primary" onclick="mergeSort()" type="button" value="Merge Sort">
+                <form class="range-field my-4 w-25">
+                    <lable>Delay</lable>
+                    <input id="slider" onchange="updateSlider()" type="range" min="0" max="100" />  
+                </form>
+                <form class="range-field my-4 w-25">
+                    <lable>Size</lable>
+                    <input id="sizeSlider" onchange="sizeSliderUpdate()" type="range" min="0" max="100" />  
+                </form>
+            </div>
+        </div>
+        
     </div>
     
     <script>
         window.onresize = function(){ location.reload(); }
         var cm = new CanvasManager("display");
-        //var list = new VisualSortingArray(100);
-        //list.shuffle();
+
         var list = new DelayFeedBackArray();
         setInterval(function(){
             cm.drawArray(list);
         },10);
         
-        //fill();
-        //check();
-        run();
-        
-        
-        
-        async function run(){
-            await fill();
-            await check();
+        function updateSlider(){
+            list.delay = document.getElementById("slider").value;
         }
+        function sizeSliderUpdate(){
+            list.newRandom(document.getElementById("sizeSlider").value);
+        }
+     
+        play();
         
-        
-        async function fill() {
-            return new Promise(async resolve => {
-            for(var i = 0; i < 1000; i++){
-               var result = await list.push(i+1);
-            }
-            resolve();
-        });
+        async function play(){
+            list.delay = 0;
+            //await fill();
+            list.newRandom(200);
+            //await shuffle();
+            //list.delay = 10;
+            //await insertionSort();
+            //await selectionSort();
+            //await mergeSort(0,list.length-1);
+            //await shuffle();
             
-
         }
-        async function check() {
-            for(var i = 0; i < 1000; i++){
-               var result = await list.getWithDelay(i);
-                console.log(result);
+        
+        async function fill(length) {
+            for(var i = 0; i < length; i++){
+                    await list.push(i+1);
             }
-
         }
+        
+        async function shuffle() {
+            for(var i = list.length-1; i > 0; i--){
+                var j = Math.floor(Math.random() * (i+1));
+                //await list.swapWithDelay(i,j);
+                var temp = await list.getWithDelay(i);
+                await list.setWithDelay(i,await list.getWithDelay(j));
+                await list.setWithDelay(j,temp);
+            }
+        }
+           
+        async function selectionSort() {
+                for(var i = 0; i < list.length; i++){
+                    var current = await list.getWithDelay(i);
+                    var currrentIndex = i;
+                    for(var j = i+1; j < list.length; j++){
+                        var curr = await list.getWithDelay(j);
+                        if(curr < current){
+                            current = curr;
+                            currrentIndex = j;
+                        }
+                    }
+                if(currrentIndex != i){
+                    //await list.swapWithDelay(i,currrentIndex);
+                    var temp = await list.getWithDelay(i);
+                    await list.setWithDelay(i,await list.getWithDelay(currrentIndex));
+                    await list.setWithDelay(currrentIndex,temp);
+                }
+            }
+        }
+        
+        async function insertionSort() {
+            for(var i = 1; i < list.length; i++){
+                var curr = await list.getWithDelay(i);
+                var j = i -1;
+                while(j >= 0 && await list.getWithDelay(j) > curr){
+                    await list.setWithDelay(j + 1, await list.getWithDelay(j)); 
+                    j--;
+                }
+                await list.setWithDelay(j + 1,curr);
+            }
+        }
+        
+        
+        
+        async function mergeSort(l = 0, r = list.length-1) 
+        { 
+        if (l < r) 
+        { 
+        // Same as (l+r)/2, but avoids overflow for 
+        // large l and h 
+        var m = l+Math.floor((r-l)/2); 
+        // Sort first and second halves 
+        await mergeSort(l, m); 
+        await mergeSort(m+1, r); 
+  
+        await merge(l, m, r); 
+        } 
+} 
+        // Merges two subarrays of arr[]. 
+// First subarray is arr[l..m] 
+// Second subarray is arr[m+1..r]
+        async function merge(l,m,r) 
+        { 
+            var i, j, k; 
+            var n1 = m - l + 1; 
+            var n2 =  r - m; 
 
-        
-        
-        
-        
-        console.log(list)
+            /* create temp arrays */
+            var leftArray = new Array();
+            var rightArray = new Array();
+
+            /* Copy data to temp arrays L[] and R[] */
+            for (i = 0; i < n1; i++) 
+                leftArray.push(await list.getWithDelay(l + i)); 
+            for (j = 0; j < n2; j++) 
+                rightArray.push(await list.getWithDelay(m + 1+ j)); 
+
+            /* Merge the temp arrays back into arr[l..r]*/
+            i = 0; // Initial index of first subarray 
+            j = 0; // Initial index of second subarray 
+            k = l; // Initial index of merged subarray 
+            while (i < n1 && j < n2) 
+            { 
+                if (leftArray[i] <= rightArray[j]) 
+                { 
+                    await list.setWithDelay(k,leftArray[i]); 
+                    i++; 
+                } 
+                else
+                { 
+                    await list.setWithDelay(k,rightArray[j]); 
+                    j++; 
+                } 
+                k++; 
+            } 
+
+            /* Copy the remaining elements of L[], if there 
+               are any */
+            while (i < n1) 
+            { 
+                await list.setWithDelay(k,leftArray[i]);
+                i++; 
+                k++; 
+            } 
+
+            /* Copy the remaining elements of R[], if there 
+               are any */
+            while (j < n2) 
+            { 
+                await list.setWithDelay(k,rightArray[j]); 
+                j++; 
+                k++; 
+            } 
+        } 
+
     </script>
     
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

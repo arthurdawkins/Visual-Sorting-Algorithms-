@@ -7,7 +7,7 @@ function CanvasManager(canvasId){
     this.beingCheckedColor = "yellow";
     this.bgColor = "black";
     
-    canvas.width = canvas.parentElement.clientWidth;
+    canvas.width = canvas.parentElement.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
     
     
@@ -16,7 +16,7 @@ function CanvasManager(canvasId){
         var barWidth = canvas.width/fba.length;
         for(var i = 0; i < fba.length; i++){
             var color = this.stdColor;
-            if(fba.get(i).beingSet)color = this.beingSetColor;
+            if(fba.get(i).beingChecked)color = this.beingCheckedColor;
             if(fba.get(i).beingChecked)color = this.beingCheckedColor;
             drawBar({height:canvas.height/fba.length * fba.get(i).value, width:barWidth, start:(barWidth*i)},color);
         }

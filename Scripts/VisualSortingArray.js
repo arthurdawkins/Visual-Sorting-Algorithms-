@@ -1,61 +1,79 @@
 function DelayFeedBackArray(size = null){
-    var array = new Array();
+    this.array = new Array();
     var ctx = this;
     this.length = 0;
+    this.highest = 0;
+    this.delay = 100;
     
-    var delay = 0;
+    
+    
+    this.newRandom = function(size){
+        this.array = new Array();
+        for(var i = 0; i < size; i++){
+            this.array.push(new data(i+1));
+            this.length++;
+        }
+        this.highest = this.length;
+        for(var i = this.length-1; i > 0; i--){
+            var j = Math.floor(Math.random() * (i+1));
+                //await list.swapWithDelay(i,j);
+            var temp = this.array[i].value;
+            this.array[i].value = this.array[j].value;
+            this.array[j].value = temp;
+        }
+    }
+    
+    
     
     this.push = function(value){
-        push(value);
-        setBeingSet(this.length-1,true);
+        this.length++;
+        if(value > this.highest){
+            this.highest = value;
+        }
+        this.array.push(new data(value));  
         return new Promise(resolve => {
             setTimeout(() => {
-                setBeingSet(ctx.length-1,false);
                 resolve();
-            }, delay);
+            }, this.delay);
         });
     }
     
     this.get = function(index){
-        return get(index);
+        return this.array[index];
     }
+    
     this.getWithDelay = function(index){
-        setBeingChecked(index,true);
+        this.array[index].beingChecked = true;
         return new Promise(resolve => {
             setTimeout(() => {
-                setBeingChecked(index,false);
-                resolve(get(index));
-            }, delay);
+                this.array[index].beingChecked = false;
+                resolve(ctx.get(index).value);
+            }, this.delay);
         });
     }
     
     this.setWithDelay = function(index,value){
-        return new Promise(resolve => {
-            setBeingSet(index,true);
+        this.array[index].beingSet = true;
+        this.array[index].value = value;
+        return new Promise(resolve => { 
             setTimeout(() => {
-                array[index] = value;
-                setBeingSet(index,false);
-            }, delay);
+                this.array[index].beingSet = false;
+                resolve();
+            }, this.delay);
         });
     }
     
-    
-    function push(value){
-        ctx.length++;
-        array.push(new data(value));
-        
-    }
-
-    function get(index){
-        return array[index];
-    }
-    
-    function setBeingSet(index,val){
-        array[index].beingSet = val;
-    }
-    
-    function setBeingChecked(index,val){
-        array[index].beingChecked = val;
+    this.swapWithDelay = function(index1,index2){
+        return new Promise(resolve => { 
+            setTimeout(async () => {
+                this.array[index1].beingSet = true;
+                this.array[index2].beingSet = true;
+                
+                this.array[index1].beingSet = false;
+                this.array[index2].beingSet = false;
+                resolve();
+            }, this.delay);
+        });
     }
     
     function data(value){
