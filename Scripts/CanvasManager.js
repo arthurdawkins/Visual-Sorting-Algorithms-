@@ -3,26 +3,29 @@ function CanvasManager(canvasId){
     var canvas = document.getElementById(canvasId);
     var ctx = canvas.getContext("2d");
     this.stdColor = "green";
+    this.accessColor = "yellow";
     this.bgColor = "black";
     
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
     
     this.drawArray = function(vsa){
-        drawBackGround();
+        drawBackGround(this.bgColor);
         var barWidth = canvas.width/vsa.array.length;
         for(var i = 0; i < vsa.array.length; i++){
-            drawBar({height:canvas.height/vsa.array.length * vsa.array[i].value, width:barWidth, start:(barWidth*i)});
+            var color = this.stdColor;
+            if(vsa.array[i].beingAccessed)color = this.accessColor;
+            drawBar({height:canvas.height/vsa.array.length * vsa.array[i].value, width:barWidth, start:(barWidth*i)},color);
         }
     }
     
-    function drawBar(bar){
-        ctx.fillStyle = "green";
+    function drawBar(bar,color){
+        ctx.fillStyle = color;
         ctx.fillRect(bar.start,canvas.height - bar.height,bar.width,canvas.height);
     }
     
-    function drawBackGround(){
-        ctx.fillStyle = "black";
+    function drawBackGround(color){
+        ctx.fillStyle = color;
         ctx.fillRect(0,0,canvas.width,canvas.height);
     }
 }
