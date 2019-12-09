@@ -1,3 +1,103 @@
+function DelayFeedBackArray(size = null){
+    var array = new Array();
+    var ctx = this;
+    this.length = 0;
+    
+    var delay = 1000;
+    
+    this.push = function(value){
+        push(value);
+        setBeingSet(this.length-1,true);
+        return new Promise(resolve => {
+            setTimeout(() => {
+                setBeingSet(ctx.length-1,false);
+                resolve();
+            }, delay);
+        });
+    }
+    
+    this.get = function(index){
+        return get(index);
+    }
+    
+    this.set = function(index,value){
+        return new Promise(resolve => {
+            //array[index].beingSet = true;
+            setTimeout(() => {
+                array[index] = value;
+                //array[index].beingSet = false;
+            }, delay);
+        });
+    }
+    
+    
+    function push(value){
+        ctx.length++;
+        array.push(new data(value));
+        
+    }
+
+    function get(index){
+        return array[index];
+    }
+    
+    function setBeingSet(index,val){
+        console.log(array+" "+index);
+        array[index].beingSet = val;
+    }
+    
+    function data(value){
+        this.value = value;
+        this.beingChecked = false;
+        this.beingSet = false;
+    }
+    
+}
+
+
+async function asyncCall() {
+  for(var i = 0; i < 10;i++){
+    console.log('calling');
+  	var result = await huh();
+    console.log(result);
+  }
+}
+
+//asyncCall();
+
+function huh(_callback){
+    return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 1000);
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function VisualSortingArray(size){
     this.running = false;
     this.array = new Array(size);
@@ -47,5 +147,13 @@ function VisualSortingArray(size){
             this.array[i].beingAccessed = false;
         }
     }
+    
+}
+
+
+
+
+function runnableAlgorithm(name){
+    this.name = name;
     
 }

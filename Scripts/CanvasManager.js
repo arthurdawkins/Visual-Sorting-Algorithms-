@@ -19,8 +19,19 @@ function CanvasManager(canvasId){
         }
     }
     
+    this.drawfbArray = function(fba){
+        drawBackGround(this.bgColor);
+        var barWidth = canvas.width/fba.length;
+        for(var i = 0; i < fba.length; i++){
+            var color = this.stdColor;
+            if(fba.get(i).beingSet)color = this.accessColor;
+            drawBar({height:canvas.height/fba.length * fba.get(i).value, width:barWidth, start:(barWidth*i)},color);
+        }
+    }
+    
     function drawBar(bar,color){
         ctx.fillStyle = color;
+        console.log(bar);
         ctx.fillRect(bar.start,canvas.height - bar.height,bar.width,canvas.height);
     }
     

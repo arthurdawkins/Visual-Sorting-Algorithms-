@@ -31,13 +31,20 @@
     <script>
         window.onresize = function(){ location.reload(); }
         var cm = new CanvasManager("display");
-        var list = new VisualSortingArray(100);
-        list.shuffle();
+        //var list = new VisualSortingArray(100);
+        //list.shuffle();
+        var list = new DelayFeedBackArray();
         setInterval(function(){
-            cm.drawArray(list);
-        },5);
+            cm.drawfbArray(list);
+        },1000);
         
-        
+        fill();
+        async function fill() {
+            for(var i = 0; i < 12; i++){
+               var result = await list.push(i+1);
+            }
+        }
+
         
         
         
