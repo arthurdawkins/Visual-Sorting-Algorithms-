@@ -8,16 +8,21 @@ function CanvasManager(canvasId){
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
     
-    this.displayArray = function(vsa){
-        
+    this.drawArray = function(vsa){
+        drawBackGround();
+        var barWidth = canvas.width/vsa.array.length;
+        for(var i = 0; i < vsa.array.length; i++){
+            drawBar({height:canvas.height/vsa.array.length * vsa.array[i].value, width:barWidth, start:(barWidth*i)});
+        }
     }
     
-    function displayBar(bar){
-        ctx.fillRect()
+    function drawBar(bar){
+        ctx.fillStyle = "green";
+        ctx.fillRect(bar.start,canvas.height - bar.height,bar.width,canvas.height);
     }
     
     function drawBackGround(){
-        ctx.fillStyle = this.bgColor;
+        ctx.fillStyle = "black";
         ctx.fillRect(0,0,canvas.width,canvas.height);
     }
 }
