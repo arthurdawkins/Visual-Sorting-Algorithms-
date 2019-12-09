@@ -11,14 +11,14 @@ function CanvasManager(canvasId){
     canvas.height = canvas.parentElement.clientHeight;
     
     
-    this.drawArray = function(fba){
+    this.drawArray = function(list){
         drawBackGround(this.bgColor);
-        var barWidth = canvas.width/fba.length;
-        for(var i = 0; i < fba.length; i++){
+        var barWidth = canvas.width/list.length;
+        for(var i = 0; i < list.length; i++){
             var color = this.stdColor;
-            if(fba.get(i).beingChecked)color = this.beingCheckedColor;
-            if(fba.get(i).beingChecked)color = this.beingCheckedColor;
-            drawBar({height:canvas.height/fba.length * fba.get(i).value, width:barWidth, start:(barWidth*i)},color);
+            if(list.get(i).beingChecked)color = this.beingCheckedColor;
+            if(list.get(i).beingChecked)color = this.beingCheckedColor;
+            drawBar({height:canvas.height/list.length * list.get(i).value, width:barWidth, start:(barWidth*i)},color);
         }
     }
     

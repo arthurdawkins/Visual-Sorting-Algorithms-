@@ -2,46 +2,42 @@ function DelayFeedBackArray(size = null){
     this.array = new Array();
     var ctx = this;
     this.length = 0;
-    this.highest = 0;
     this.delay = 100;
     
-    
-    
-    this.newRandom = function(size){
+    if(size != null){
         this.array = new Array();
         for(var i = 0; i < size; i++){
-            this.array.push(new data(i+1));
+            this.array.push(new data(0));
             this.length++;
         }
-        this.highest = this.length;
-        for(var i = this.length-1; i > 0; i--){
-            var j = Math.floor(Math.random() * (i+1));
-                //await list.swapWithDelay(i,j);
-            var temp = this.array[i].value;
-            this.array[i].value = this.array[j].value;
-            this.array[j].value = temp;
-        }
     }
-    
-    
     
     this.push = function(value){
         this.length++;
-        if(value > this.highest){
-            this.highest = value;
-        }
-        this.array.push(new data(value));  
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve();
-            }, this.delay);
-        });
+        this.array.push(new data(value));
     }
-    
+    //returns data object
     this.get = function(index){
         return this.array[index];
     }
     
+    this.set = function(index,value){
+        return this.array[index].value = value;
+    }
+    
+    
+    this.pushWithDelay = function(value){
+        this.length++;
+        this.array[length-1].beingSet = true;
+        this.array.push(new data(value));  
+        return new Promise(resolve => {
+            setTimeout(() => {
+                this.array[length-1].beingSet = false;
+                resolve();
+            }, this.delay);
+        });
+    }
+    //returns value
     this.getWithDelay = function(index){
         this.array[index].beingChecked = true;
         return new Promise(resolve => {
@@ -58,19 +54,6 @@ function DelayFeedBackArray(size = null){
         return new Promise(resolve => { 
             setTimeout(() => {
                 this.array[index].beingSet = false;
-                resolve();
-            }, this.delay);
-        });
-    }
-    
-    this.swapWithDelay = function(index1,index2){
-        return new Promise(resolve => { 
-            setTimeout(async () => {
-                this.array[index1].beingSet = true;
-                this.array[index2].beingSet = true;
-                
-                this.array[index1].beingSet = false;
-                this.array[index2].beingSet = false;
                 resolve();
             }, this.delay);
         });
