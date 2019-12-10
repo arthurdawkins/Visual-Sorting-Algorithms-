@@ -8,7 +8,7 @@ function CanvasManager(canvasId){
     this.bgColor = "black";
     
     canvas.width = canvas.parentElement.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientHeight;
+    canvas.height = 400;
     
     
     this.drawArray = function(list){
@@ -17,7 +17,7 @@ function CanvasManager(canvasId){
         for(var i = 0; i < list.length; i++){
             var color = this.stdColor;
             if(list.get(i).beingChecked)color = this.beingCheckedColor;
-            if(list.get(i).beingChecked)color = this.beingCheckedColor;
+            if(list.get(i).beingSet)color = this.beingSetColor;
             drawBar({height:canvas.height/list.length * list.get(i).value, width:barWidth, start:(barWidth*i)},color);
         }
     }
