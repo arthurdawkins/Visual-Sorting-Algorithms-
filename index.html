@@ -30,6 +30,7 @@
                 <input class="btn btn-primary btn-block" onclick="selectFunction('insertionSort')" type="button" value="Insertion Sort">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('mergeSort')" type="button" value="Merge Sort">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('quickSort')" type="button" value="Quick Sort">
+                <input class="btn btn-primary btn-block" onclick="selectFunction('shellSort')" type="button" value="Shell Sort">
             </div> 
             <div class="col-xs-4 mx-auto">
                 <h2>Array Controls</h2>
@@ -91,6 +92,9 @@
                         break;
                     case "quickSort":
                         await quickSort();
+                        break;
+                    case "shellSort":
+                        await shellSort();
                         break;
                     default:
                         break;
@@ -241,6 +245,24 @@
                 await quickSort(pi + 1, high);  
             }  
         }  
+        
+        
+        async function shellSort() 
+        { 
+            var n = list.length; 
+            for (var gap = Math.floor(n/2); gap > 0; gap = Math.floor(gap/2)) 
+            { 
+                console.log(gap);
+                for (var i = gap; i < n; i += 1) 
+                { 
+                    var temp = await list.getWithDelay(i); 
+                    var j; 
+                    for (j = i; j >= gap && await list.getWithDelay(j - gap) > temp; j -= gap) 
+                    await list.setWithDelay(j,await list.getWithDelay(j - gap)); 
+                    await list.setWithDelay(j,temp); 
+                } 
+            } 
+        } 
     </script>
     
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
