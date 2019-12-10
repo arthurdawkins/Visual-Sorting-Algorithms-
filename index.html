@@ -28,12 +28,13 @@
                 <input class="btn btn-primary btn-block" onclick="selectFunction('shuffle')" type="button" value="Shuffle">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('selectionSort')" type="button" value="Selection Sort">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('insertionSort')" type="button" value="Insertion Sort">
+                <input class="btn btn-primary btn-block" onclick="selectFunction('shellSort')" type="button" value="Shell Sort">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('mergeSort')" type="button" value="Merge Sort">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('quickSort')" type="button" value="Quick Sort">
-                <input class="btn btn-primary btn-block" onclick="selectFunction('shellSort')" type="button" value="Shell Sort">
             </div> 
             <div class="col-xs-4 mx-auto">
                 <h2>Array Controls</h2>
+                <input class="btn btn-primary btn-block" onclick="reset()" type="button" value="Reset">
                 <div class="d-block mt-3">
                     <lable>Delay</lable>
                     <form class="range-field d-inline">
@@ -44,7 +45,7 @@
                 <div class="d-block mt-4">
                     <lable>Size</lable>
                     <form class="range-field d-inline">
-                        <input id="size_slider" onchange="sizeSlider(this)" class="" type="range" value="50" min="10" max="400" />
+                        <input id="size_slider" onchange="sizeSlider(this)" class="" type="range" value="50" min="10" max="200" />
                     </form>
                     <span id="sizeSpan">50</span>
                 </div>
@@ -53,7 +54,7 @@
     </div>
     
     <script>
-        window.onresize = function(){ location.reload(); }
+        window.onresize = function(){ reset(); }
         var cm = new CanvasManager("display");
         var runningFunction = null;
         
@@ -62,6 +63,9 @@
             cm.drawArray(list);
         },10);
         
+        function reset(){
+            location.reload();
+        }
         
         function delaySlider(slider){
             document.getElementById("delaySpan").innerHTML = slider.value;
@@ -75,7 +79,7 @@
         }
         
         async function selectFunction(fname){
-            $(':button').prop('disabled', true);
+            $('#sortingMethods :button').prop('disabled', true);
             $('#size_slider').prop('disabled', true);
             switch(fname){
                     case "shuffle":
@@ -99,7 +103,7 @@
                     default:
                         break;
             }
-            $(':button').prop('disabled', false);
+            $('#sortingMethods :button').prop('disabled', false);
             $('#size_slider').prop('disabled', false);
         }
         
@@ -209,11 +213,7 @@
             } 
         } 
         
-                /* This function takes last element as pivot, places  
-        the pivot element at its correct position in sorted  
-        array, and places all smaller (smaller than pivot)  
-        to left of pivot and all greater elements to right  
-        of pivot */
+
         async function partition (low,high)  
         {  
             var pivot = await list.getWithDelay(high); // pivot  
