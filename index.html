@@ -29,13 +29,14 @@
                 <input class="btn btn-primary btn-block" onclick="selectFunction('selectionSort')" type="button" value="Selection Sort">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('insertionSort')" type="button" value="Insertion Sort">
                 <input class="btn btn-primary btn-block" onclick="selectFunction('mergeSort')" type="button" value="Merge Sort">
+                <input class="btn btn-primary btn-block" onclick="selectFunction('quickSort')" type="button" value="Quick Sort">
             </div> 
             <div class="col-xs-4 mx-auto">
                 <h2>Array Controls</h2>
                 <div class="d-block mt-3">
                     <lable>Delay</lable>
                     <form class="range-field d-inline">
-                        <input onchange="delaySlider(this)" class="" type="range" min="0" max="100" />
+                        <input id="delay_slider" onchange="delaySlider(this)" class="" type="range" min="0" max="100" />
                     </form>
                     <span id="delaySpan">50</span>
                 </div>
@@ -69,6 +70,7 @@
         function sizeSlider(slider){
             document.getElementById("sizeSpan").innerHTML = slider.value;
             list = new DelayFeedBackArray(slider.value);
+            list.delay = document.getElementById("delay_slider").value;
         }
         
         async function selectFunction(fname){
@@ -87,8 +89,11 @@
                     case "mergeSort":
                         await mergeSort();
                         break;
-                default:
-                    break;
+                    case "quickSort":
+                        await quickSort();
+                        break;
+                    default:
+                        break;
             }
             $(':button').prop('disabled', false);
             $('#size_slider').prop('disabled', false);
@@ -199,7 +204,43 @@
                 k++; 
             } 
         } 
+        
+                /* This function takes last element as pivot, places  
+        the pivot element at its correct position in sorted  
+        array, and places all smaller (smaller than pivot)  
+        to left of pivot and all greater elements to right  
+        of pivot */
+        async function partition (low,high)  
+        {  
+            var pivot = await list.getWithDelay(high); // pivot  
+            var i = (low - 1); // Index of smaller element  
 
+            for (var j = low; j <= high - 1; j++)  
+            {  
+                // If current element is smaller than the pivot  
+                if (await list.getWithDelay(j) < pivot)  
+                {  
+                    i++; // increment index of smaller element
+                    var temp = await list.getWithDelay(i);
+                    await list.setWithDelay(i,await list.getWithDelay(j));
+                    await list.setWithDelay(j,temp);
+                }  
+            } 
+            var temp = await list.getWithDelay(i+1);
+            await list.setWithDelay(i+1,await list.getWithDelay(high));
+            await list.setWithDelay(j,temp);
+            return (i + 1);  
+        }  
+
+        async function quickSort(low = 0,high = list.length-1)  
+        {  
+            if (low < high)  
+            {  
+                var pi = await partition(low,high);    
+                await quickSort(low, pi - 1);  
+                await quickSort(pi + 1, high);  
+            }  
+        }  
     </script>
     
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
